@@ -7,12 +7,21 @@
     <title>Forca</title>
 
     <link rel="stylesheet" href="css/reset.css" />
-    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/index.css" />
     <script src="js/forms_canvas.js"></script>
     <script src="js/tecladoInterceptor.js"></script>
+    <script src="js/dicionarioHandler.js"></script>
   </head>
   <body>
+    <p id="palavrasTentadas"></p>
+
     <canvas class="jogo"></canvas>
+    <div id="dicionario">
+      <h1>Dicionário</h1>
+      <h3 id="palavra"></h3>
+      <h3 id="significado"></h3>
+      <h3 id="etimologia"></h3>
+    </div>
   </body>
   <script>
     const canvas = document.querySelector(".jogo");

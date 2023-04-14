@@ -1,0 +1,81 @@
+body {
+  background-color: #fff;
+  font-family: "Roboto", sans-serif;
+  font-size: 1.2em;
+  color: #000;
+  text-align: justify;
+  text-justify: inter-word;
+  text-indent: 2em;
+  margin: 0;
+  padding: 0;
+}
+#palavrasTentadas {
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #000;
+  word-break: break-all;
+  width: 25%;
+  text-shadow: 1px 1px 1px #000;
+  /* text-align: justify; */
+  /* text-justify: inter-word; */
+  /* text-indent: 2em; */
+  margin: 0;
+  padding: 0;
+}
+verde {
+  color: #2cbe26;
+}
+
+vermelho {
+  color: #ff0000;
+}
+
+#dicionario {
+  width: 100%;
+  height: 100%;
+  background-color: #fff;
+  /* position: absolute;
+    top: 0;
+    left: 0; */
+  z-index: 100;
+  display: block;
+
+  --letra-tamanho: 1.2em;
+}
+
+#palavra {
+  width: 100%;
+  height: 100%;
+  background-color: #fff;
+  margin: 10px;
+  z-index: 100;
+  font-size: var(--letra-tamanho);
+  font-weight: bolder;
+  text-transform: capitalize;
+
+  display: block;
+}
+
+#significado {
+  width: 100%;
+  height: 100%;
+  background-color: #fff;
+  margin: 10px;
+  z-index: 100;
+  font-size: var(--letra-tamanho);
+
+  display: block;
+}
+
+#significado .tabulacao {
+  margin: 15px 20px;
+}
+
+#significado em {
+  font-style: italic;
+  font-weight: bold;
+}
+
+#significado strong {
+  font-weight: bolder;
+}

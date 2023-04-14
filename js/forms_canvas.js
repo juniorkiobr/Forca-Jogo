@@ -38,9 +38,11 @@ var jogo = {
     _pincel: null,
     _erros: 0,
     _palavra: "",
+    _tentadas: [],
     _exibidas: [],
     _acertos: [],
     _gameOver: false,
+    _dicionario: null,
     set_canvas: function (canvas, width, height) {
         this._canvas = canvas;
         this._canvas.width = width;
@@ -49,11 +51,16 @@ var jogo = {
 
     },
     tentaPalavra: function (letra) {
-        if (this._palavra.indexOf(letra) != -1) {
+
+        if (this._palavra.indexOf(letra) != -1 && this._acertos.indexOf(letra) == -1) {
             this._acertos.push(letra);
+            letra = '<verde>' + letra + "</verde>";
         } else {
             this._erros++;
+            letra = '<vermelho>' + letra + "</vermelho>";
         }
+        this._tentadas.push(letra);
+
         // this.update();
     },
     desenhaForca: function (x, y, cor) {
@@ -69,6 +76,7 @@ var jogo = {
             let json = await palavra.json();
             console.log(json);
             console.log(json.word);
+            this._dicionario = await getSignificado(json.word);
 
             if (json.word != null && json.word != "" && json.word.length <= 12 && (jogo._palavra == "" || jogo._palavra == null)) {
                 let tmp = json.word.toLowerCase();
@@ -132,16 +140,31 @@ var jogo = {
         await this.definirPalavra();
 
         if (!this._gameOver && this._palavra != null && this._palavra != "") {
+            let palavraTentada = document.getElementById("palavrasTentadas");
+
             this.desenhaRetangulo(0, 0, this._canvas.width, this._canvas.height, colors.white);
             this.desenhaForca(15, 100, colors.black);
             this.desenhaErros();
             this.desenhaPalavra(this._palavra);
+            palavraTentada.innerHTML = "Palavras tentadas:. " + this._tentadas.join(", ");
             if (this._exibidas.join("") == this._palavra) {
                 this._gameOver = true;
                 this.desenhaRetangulo(0, 0, this._canvas.width, this._canvas.height, colors.black);
                 this.desenhaTexto("Você ganhou!", this._canvas.width / 2 - 50, this._canvas.height / 2, colors.white, "bold 20px Arial", "center");
                 this.desenhaTexto("A palavra era: " + this._palavra, this._canvas.width / 2 - 50, this._canvas.height / 2 + 25, colors.white, "bold 20px Arial", "center");
-                this.desenhaTexto("Clique para jogar novamente", this._canvas.width / 2 - 50, this._canvas.height / 2 + 50, colors.white, "bold 20px Arial", "center");
+                this.desenhaTexto("Aperte 'Enter' jogar novamente", this._canvas.width / 2 - 50, this._canvas.height / 2 + 50, colors.white, "bold 20px Arial", "center");
+                fillSignificado(this._dicionario);
+
+
+            } else if (this._erros >= 6) {
+                this._gameOver = true;
+                this.desenhaRetangulo(0, 0, this._canvas.width, this._canvas.height, colors.black);
+                this.desenhaTexto("Você perdeu!", this._canvas.width / 2 - 50, this._canvas.height / 2, colors.white, "bold 20px Arial", "center");
+                this.desenhaTexto("A palavra era: " + this._palavra, this._canvas.width / 2 - 50, this._canvas.height / 2 + 25, colors.white, "bold 20px Arial", "center");
+                this.desenhaTexto("Aperte 'Enter' jogar novamente", this._canvas.width / 2 - 50, this._canvas.height / 2 + 50, colors.white, "bold 20px Arial", "center");
+                fillSignificado(this._dicionario);
+
+
             }
         }
 
@@ -152,6 +175,16 @@ var jogo = {
         this._acertos = [];
         this._exibidas = [];
         this._palavra = "";
+        this._dicionario = "";
+        let significado = document.getElementById("significado");
+        significado.innerHTML = "";
+        let palavra = document.getElementById("palavra");
+        palavra.innerHTML = "";
+        let etimologia = document.getElementById("etimologia");
+        etimologia.innerHTML = "";
+        this._tentadas = [];
+        let palavrasTentadas = document.getElementById("palavrasTentadas");
+
     },
     desenhaRetangulo: function (x, y, largura, altura, cor, angulo = 0) {
         this._pincel.save();
