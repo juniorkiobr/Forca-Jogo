@@ -71,10 +71,16 @@ var jogo = {
             console.log(json.word);
 
             if (json.word != null && json.word != "" && json.word.length <= 12 && (jogo._palavra == "" || jogo._palavra == null)) {
-                jogo._palavra = json.word;
+                let tmp = json.word.toLowerCase();
+
+                // Linha para remover acentos
+                tmp = tmp.normalize("NFD").replace(/([\u0300-\u036f])+/g, "");
+                console.log(tmp);
+
+                jogo._palavra = tmp;
             }
 
-            _carregando = false;
+            this._carregando = false;
             // palavra.then(function (response) {
             //     // console.log(response);
             //     response.json().then(function (json) {
@@ -133,10 +139,19 @@ var jogo = {
             if (this._exibidas.join("") == this._palavra) {
                 this._gameOver = true;
                 this.desenhaRetangulo(0, 0, this._canvas.width, this._canvas.height, colors.black);
-                this.desenhaTexto("Você ganhou!", this._canvas.width / 2, this._canvas.height / 2, colors.white, "bold 20px Arial", "center");
+                this.desenhaTexto("Você ganhou!", this._canvas.width / 2 - 50, this._canvas.height / 2, colors.white, "bold 20px Arial", "center");
+                this.desenhaTexto("A palavra era: " + this._palavra, this._canvas.width / 2 - 50, this._canvas.height / 2 + 25, colors.white, "bold 20px Arial", "center");
+                this.desenhaTexto("Clique para jogar novamente", this._canvas.width / 2 - 50, this._canvas.height / 2 + 50, colors.white, "bold 20px Arial", "center");
             }
         }
 
+    },
+    resetGame: function () {
+        this._gameOver = false;
+        this._erros = 0;
+        this._acertos = [];
+        this._exibidas = [];
+        this._palavra = "";
     },
     desenhaRetangulo: function (x, y, largura, altura, cor, angulo = 0) {
         this._pincel.save();
