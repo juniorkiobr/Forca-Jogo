@@ -37,7 +37,7 @@ var jogo = {
     _canvas: null,
     _pincel: null,
     _erros: 0,
-    _palavra: "perseverança",
+    _palavra: "",
     _exibidas: [],
     _acertos: [],
     _gameOver: false,
@@ -60,6 +60,28 @@ var jogo = {
         jogo.desenhaRetangulo(x, y, 4, 100, cor);
         jogo.desenhaRetangulo(x, y, 55, 4, cor);
         jogo.desenhaRetangulo(70, y, 4, 20, cor);
+    },
+    definirPalavra: async function () {
+        if ((this._palavra == null || this._palavra == "") && !this._gameOver && !this._carregando) {
+            this._carregando = true;
+
+            let palavra = await fetch("https://api.dicionario-aberto.net/random");
+            let json = await palavra.json();
+            console.log(json);
+            console.log(json.word);
+
+            if (json.word != null && json.word != "" && json.word.length <= 12 && (jogo._palavra == "" || jogo._palavra == null)) {
+                jogo._palavra = json.word;
+            }
+
+            _carregando = false;
+            // palavra.then(function (response) {
+            //     // console.log(response);
+            //     response.json().then(function (json) {
+
+            //     });
+            // });
+        }
     },
     desenhaPalavra: function () {
         let inicioX = 95;
@@ -100,8 +122,10 @@ var jogo = {
             }
         }
     },
-    update: function () {
-        if (!this._gameOver) {
+    update: async function () {
+        await this.definirPalavra();
+
+        if (!this._gameOver && this._palavra != null && this._palavra != "") {
             this.desenhaRetangulo(0, 0, this._canvas.width, this._canvas.height, colors.white);
             this.desenhaForca(15, 100, colors.black);
             this.desenhaErros();
