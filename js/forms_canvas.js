@@ -81,10 +81,6 @@ var jogo = {
         this.desenhaRetangulo(0, 0, this._canvas.width, this._canvas.height, colors.white);
         this.desenhaForca(15, 100, colors.black);
         this.desenhaErros();
-        // this.desenhaRetangulo()
-    },
-    start: function () {
-        setInterval(this.update, 1000 / 60);
     },
     desenhaRetangulo: function (x, y, largura, altura, cor, angulo = 0) {
         this._pincel.save();
