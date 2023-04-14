@@ -37,6 +37,10 @@ var jogo = {
     _canvas: null,
     _pincel: null,
     _erros: 0,
+    _palavra: "perseverança",
+    _exibidas: [],
+    _acertos: [],
+    _gameOver: false,
     set_canvas: function (canvas, width, height) {
         this._canvas = canvas;
         this._canvas.width = width;
@@ -44,10 +48,35 @@ var jogo = {
         this._pincel = this._canvas.getContext("2d");
 
     },
+    tentaPalavra: function (letra) {
+        if (this._palavra.indexOf(letra) != -1) {
+            this._acertos.push(letra);
+        } else {
+            this._erros++;
+        }
+        // this.update();
+    },
     desenhaForca: function (x, y, cor) {
         jogo.desenhaRetangulo(x, y, 4, 100, cor);
         jogo.desenhaRetangulo(x, y, 55, 4, cor);
         jogo.desenhaRetangulo(70, y, 4, 20, cor);
+    },
+    desenhaPalavra: function () {
+        let inicioX = 95;
+        let inicioY = 180;
+        let tamanho = 30;
+        let espaco = 10;
+        for (let i = 0; i < this._palavra.length; i++) {
+            this._exibidas[i] = "_";
+            // const element = palavra[i];
+            jogo.desenhaRetangulo(inicioX, inicioY, tamanho, 3, colors.black);
+            if (this._acertos.indexOf(this._palavra[i]) != -1) {
+                this.desenhaTexto(this._palavra[i], inicioX + tamanho / 2, inicioY - 10, colors.black, "bold 20px Arial", "center");
+                this._exibidas[i] = this._palavra[i];
+            }
+            inicioX += tamanho + espaco;
+
+        }
     },
     desenhaErros: function () {
         let valores = [
@@ -70,17 +99,20 @@ var jogo = {
                 this.desenhaRetangulo(valor[0], valor[1], valor[2], valor[3], valor[4], valor[5]);
             }
         }
-        // jogo.desenhaCirculo(71, 118, 10, colors.red);
-        // jogo.desenhaRetangulo(70, 127, 4, 25, colors.red);
-        // jogo.desenhaRetangulo(70, 135, 20, 4, colors.red, 40);
-        // jogo.desenhaRetangulo(73, 135, -20, 4, colors.red, -40);
-        // jogo.desenhaRetangulo(70, 155, 20, 4, colors.red, 40);
-        // jogo.desenhaRetangulo(73, 155, -20, 4, colors.red, -40);
     },
     update: function () {
-        this.desenhaRetangulo(0, 0, this._canvas.width, this._canvas.height, colors.white);
-        this.desenhaForca(15, 100, colors.black);
-        this.desenhaErros();
+        if (!this._gameOver) {
+            this.desenhaRetangulo(0, 0, this._canvas.width, this._canvas.height, colors.white);
+            this.desenhaForca(15, 100, colors.black);
+            this.desenhaErros();
+            this.desenhaPalavra(this._palavra);
+            if (this._exibidas.join("") == this._palavra) {
+                this._gameOver = true;
+                this.desenhaRetangulo(0, 0, this._canvas.width, this._canvas.height, colors.black);
+                this.desenhaTexto("Você ganhou!", this._canvas.width / 2, this._canvas.height / 2, colors.white, "bold 20px Arial", "center");
+            }
+        }
+
     },
     desenhaRetangulo: function (x, y, largura, altura, cor, angulo = 0) {
         this._pincel.save();
@@ -113,9 +145,10 @@ var jogo = {
     desenhaQuadrado: function (x, y, tamanho, cor) {
         this.desenhaRetangulo(x, y, tamanho, tamanho, cor);
     },
-    desenhaTexto: function (texto, x, y, cor) {
+    desenhaTexto: function (texto, x, y, cor, fonte = "30px Arial", alinhamento = "left") {
         this._pincel.fillStyle = cor;
-        this._pincel.font = "30px Arial";
+        this._pincel.font = fonte;
+        this._pincel.textAlign = alinhamento;
         this._pincel.fillText(texto, x, y);
     },
     desenhaPoligono: function (x, y, raio, lados, cor) {
