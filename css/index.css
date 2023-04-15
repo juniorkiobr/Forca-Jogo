@@ -1,4 +1,5 @@
 body {
+  --circle-loading-size: 3.5em;
   background-color: #fff;
   font-family: "Roboto", sans-serif;
   font-size: 1.2em;
@@ -9,12 +10,64 @@ body {
   margin: 0;
   padding: 0;
 }
+.c-center {
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  vertical-align: middle;
+  align-content: center;
+  flex-direction: column;
+}
+#loading {
+  padding-top: 1.5em;
+  margin: 0 auto;
+  font-size: auto;
+  /* padding: 50%; */
+  background-color: #635d5d2d;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  float: left;
+}
+#loading .circle {
+  /* margin: auto auto; */
+  /* margin-left: auto; */
+  /* margin-right: auto; */
+
+  /* margin: 2em 45%; */
+}
+@keyframes loading {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+.circle {
+  width: var(--circle-loading-size);
+  height: var(--circle-loading-size);
+  background-color: transparent;
+  border-top: 4px rgb(95, 95, 219) solid;
+
+  /* border: 4px dotted #000; */
+  border-radius: 50%;
+  /* position: absolute;
+  top: 0;
+  left: 0; */
+  z-index: 100;
+  display: block;
+  animation: loading 1s linear infinite;
+}
 #palavrasTentadas {
   font-size: 1.2em;
   font-weight: bold;
   color: #000;
   word-break: break-all;
-  width: 25%;
+  /* width: 25%; */
   text-shadow: 1px 1px 1px #000;
   /* text-align: justify; */
   /* text-justify: inter-word; */

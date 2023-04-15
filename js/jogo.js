@@ -12,6 +12,11 @@ var jogo = {
     _gameOver: false,
     _dicionario: null,
     set_canvas: function (canvas, width, height) {
+        this._loading = document.getElementById("loading");
+
+        // loading.style.display = "block";
+        this._loading.style.width = width + "px";
+        this._loading.style.height = height + "px";
 
         this._canvas = formas.set_canvas(canvas, width, height);
 
@@ -49,8 +54,11 @@ var jogo = {
     },
     definirPalavra: async function () {
         this.calculaTamMaxPalavra();
+        if (this._gameOver) { return; };
+        this._canvas.desenhaRetangulo(0, 0, this._canvas.width, this._canvas.height, colors.white);
+        this.desenhaForca(15, 100, colors.black);
 
-        if ((this._palavra == null || this._palavra == "") && !this._gameOver && !this._carregando) {
+        if ((this._palavra == null || this._palavra == "") && !this._carregando) {
             this._carregando = true;
 
             // let palavra = await fetch("https://api.dicionario-aberto.net/random");
@@ -74,6 +82,7 @@ var jogo = {
             }
 
             this._carregando = false;
+            this._loading.style.display = "none";
             // palavra.then(function (response) {
             //     // console.log(response);
             //     response.json().then(function (json) {
@@ -121,13 +130,13 @@ var jogo = {
         }
     },
     update: async function () {
+
         await this.definirPalavra();
 
         if (!this._gameOver && this._palavra != null && this._palavra != "") {
+
             let palavraTentada = document.getElementById("palavrasTentadas");
 
-            this._canvas.desenhaRetangulo(0, 0, this._canvas.width, this._canvas.height, colors.white);
-            this.desenhaForca(15, 100, colors.black);
             this.desenhaErros();
             this.desenhaPalavra(this._palavra);
             palavraTentada.innerHTML = "Palavras tentadas:. " + this._tentadas.join(", ");
@@ -155,6 +164,8 @@ var jogo = {
     },
     resetGame: function () {
         this._gameOver = false;
+        this._loading.style.removeProperty("display");
+
         this._erros = 0;
         this._acertos = [];
         this._exibidas = [];
