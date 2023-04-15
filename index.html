@@ -31,9 +31,10 @@
       //   jogo.update();
       setInterval(() => {
         // console.log(jogo._canvas);
-        if (jogo._canvas == null) {
-          jogo.set_canvas(canvas, 600, 200);
+        if (jogo._canvas == null || jogo._canvas.width != window.innerWidth) {
+          jogo.set_canvas(canvas, window.innerWidth, 200);
         }
+
         jogo.update();
       }, 1000 / 60);
     });

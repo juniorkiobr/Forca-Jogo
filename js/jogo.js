@@ -1,5 +1,9 @@
 var jogo = {
     _canvas: null,
+    _posPalavra: [95, 180],
+    _tamCampoPalavra: 30,
+    _espPalavra: 10,
+    _maxPalavra: 0,
     _erros: 0,
     _palavra: "",
     _tentadas: [],
@@ -11,6 +15,19 @@ var jogo = {
 
         this._canvas = formas.set_canvas(canvas, width, height);
 
+    },
+    calculaTamMaxPalavra: function () {
+        let maximo = 0;
+        for (let i = this._posPalavra[0]; i < (this._canvas.width + this._tamCampoPalavra + this._espPalavra); i += this._tamCampoPalavra + this._espPalavra) {
+            maximo++;
+        }
+        if (maximo < this._maxPalavra) {
+            this._maxPalavra = maximo;
+            // this._palavra = "";
+            this.resetGame();
+        } else if (maximo > 0) {
+            this._maxPalavra = maximo;
+        }
     },
     tentaPalavra: function (letra) {
 
@@ -31,6 +48,8 @@ var jogo = {
         jogo._canvas.desenhaRetangulo(70, y, 4, 20, cor);
     },
     definirPalavra: async function () {
+        this.calculaTamMaxPalavra();
+
         if ((this._palavra == null || this._palavra == "") && !this._gameOver && !this._carregando) {
             this._carregando = true;
 
@@ -40,7 +59,8 @@ var jogo = {
             console.log(json.word);
             this._dicionario = await getSignificado(json.word);
 
-            if (json.word != null && json.word != "" && json.word.length <= 12 && (jogo._palavra == "" || jogo._palavra == null)) {
+
+            if (json.word != null && json.word != "" && json.word.length <= this._maxPalavra && (jogo._palavra == "" || jogo._palavra == null)) {
                 let tmp = json.word.toLowerCase();
 
                 // Linha para remover acentos
@@ -60,19 +80,18 @@ var jogo = {
         }
     },
     desenhaPalavra: function () {
-        let inicioX = 95;
-        let inicioY = 180;
-        let tamanho = 30;
-        let espaco = 10;
+        let inicioX = this._posPalavra[0];
+        let inicioY = this._posPalavra[1];
+
         for (let i = 0; i < this._palavra.length; i++) {
             this._exibidas[i] = "_";
             // const element = palavra[i];
-            jogo._canvas.desenhaRetangulo(inicioX, inicioY, tamanho, 3, colors.black);
+            jogo._canvas.desenhaRetangulo(inicioX, inicioY, this._tamCampoPalavra, 3, colors.black);
             if (this._acertos.indexOf(this._palavra[i]) != -1) {
-                this._canvas.desenhaTexto(this._palavra[i], inicioX + tamanho / 2, inicioY - 10, colors.black, "bold 20px Arial", "center");
+                this._canvas.desenhaTexto(this._palavra[i], inicioX + this._tamCampoPalavra / 2, inicioY - 10, colors.black, "bold 20px Arial", "center");
                 this._exibidas[i] = this._palavra[i];
             }
-            inicioX += tamanho + espaco;
+            inicioX += this._tamCampoPalavra + this._espPalavra;
 
         }
     },
