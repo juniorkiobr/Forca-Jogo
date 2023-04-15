@@ -1,7 +1,10 @@
 async function getSignificado(palavra) {
     let definicao = await fetch("https://api.dicionario-aberto.net/word/" + palavra + "/1?format=json");
+    // console.log(await fetch("https://dicio-api-ten.vercel.app/v2/" + palavra + "/"));
+    window.awaitFetch = true;
     let json = await definicao.json();
-    return xmlTranslate(json[0].xml);
+    window.awaitFetch = false;
+    return json[0] ? xmlTranslate(json[0].xml) : null;
 }
 
 function fillSignificado(dicionario) {

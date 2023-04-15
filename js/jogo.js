@@ -53,21 +53,24 @@ var jogo = {
         if ((this._palavra == null || this._palavra == "") && !this._gameOver && !this._carregando) {
             this._carregando = true;
 
-            let palavra = await fetch("https://api.dicionario-aberto.net/random");
-            let json = await palavra.json();
-            console.log(json);
-            console.log(json.word);
-            this._dicionario = await getSignificado(json.word);
+            // let palavra = await fetch("https://api.dicionario-aberto.net/random");
+            let palavra = "";
+            // let json = await palavra.json();
 
+            while (this._dicionario == null) {
+                if (window.awaitFetch == true) { continue; }
+                palavra = getRandomWord(this._maxPalavra);
+                this._dicionario = await getSignificado(palavra);
+            }
 
-            if (json.word != null && json.word != "" && json.word.length <= this._maxPalavra && (jogo._palavra == "" || jogo._palavra == null)) {
-                let tmp = json.word.toLowerCase();
+            if (palavra != null && palavra != "" && palavra.length <= this._maxPalavra && (jogo._palavra == "" || jogo._palavra == null)) {
+                let tmp = palavra.toLowerCase();
 
                 // Linha para remover acentos
                 tmp = tmp.normalize("NFD").replace(/([\u0300-\u036f])+/g, "");
                 console.log(tmp);
 
-                jogo._palavra = tmp;
+                this._palavra = tmp;
             }
 
             this._carregando = false;
@@ -156,7 +159,7 @@ var jogo = {
         this._acertos = [];
         this._exibidas = [];
         this._palavra = "";
-        this._dicionario = "";
+        this._dicionario = null;
         let significado = document.getElementById("significado");
         significado.innerHTML = "";
         let palavra = document.getElementById("palavra");
