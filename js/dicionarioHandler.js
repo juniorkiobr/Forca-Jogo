@@ -1,18 +1,24 @@
 async function getSignificado(palavra) {
     palavra = palavra.toLowerCase();
 
-    // Linha para remover acentos
-    palavra = palavra.normalize("NFD").replace(/([\u0300-\u036f])+/g, "");
-    let definicao = await fetch("https://api-dicio-juniorkiobr.vercel.app/api/dicionario?word=" + palavra);
-    window.awaitFetch = true;
-    let json = await definicao.json();
-    window.awaitFetch = false;
-    if (json && json.length == 0 && (json.status_code && json.status_code != 200) || json.error || (json.definicao && json.definicao.length == 0)) {
+    try {
+        // Linha para remover acentos
+        palavra = palavra.normalize("NFD").replace(/([\u0300-\u036f])+/g, "");
+        window.awaitFetch = true;
+
+        let definicao = await fetch("https://api-dicio-juniorkiobr.vercel.app/api/dicionario?word=" + palavra);
+        let json = await definicao.json();
+        window.awaitFetch = false;
+        if (json && json.length == 0 && (json.status_code && json.status_code != 200) || json.error || (json.definicao && json.definicao.length == 0)) {
+            return null;
+        }
+
+        // return json[0] ? xmlTranslate(json[0].xml) : null;
+        return json ? json : null;
+    } catch (error) {
+        // console.error(error);
         return null;
     }
-
-    // return json[0] ? xmlTranslate(json[0].xml) : null;
-    return json ? json : null;
 }
 
 function showDict(json) {

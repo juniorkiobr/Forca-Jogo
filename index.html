@@ -35,11 +35,14 @@
     const canvas = document.querySelector(".jogo");
 
     document.addEventListener("DOMContentLoaded", () => {
-      jogo.update();
+      // jogo.update();
       setInterval(() => {
-        // console.log(jogo._canvas);
-        if (jogo._canvas == null || jogo._canvas.width != window.innerWidth) {
-          jogo.set_canvas(canvas, window.innerWidth, 200);
+        let width_screen =
+          window.outerWidth > window.innerWidth
+            ? window.innerWidth
+            : window.outerWidth;
+        if (jogo._canvas == null || jogo._canvas.width > width_screen) {
+          jogo.set_canvas(canvas, width_screen, 200);
         }
         jogo.update();
       }, 1000 / 60);

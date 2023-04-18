@@ -10,9 +10,11 @@ function abrirArquivo() {
 
 function getRandomWord(tamMaximo) {
     let palavra = "";
-    while (palavra.length == 0 && palavra.length < tamMaximo) {
+    do {
         palavra = arquivo[Math.floor(Math.random() * arquivo.length)];
+
     }
+    while (palavra.length > tamMaximo)
     console.log("palavras.js: ", palavra);
     return palavra;
 }

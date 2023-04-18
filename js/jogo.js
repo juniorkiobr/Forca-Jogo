@@ -26,6 +26,7 @@ var jogo = {
         for (let i = this._posPalavra[0]; i < (this._canvas.width + this._tamCampoPalavra + this._espPalavra); i += this._tamCampoPalavra + this._espPalavra) {
             maximo++;
         }
+        maximo--;
         if (maximo < this._maxPalavra) {
             this._maxPalavra = maximo;
             // this._palavra = "";
@@ -33,6 +34,7 @@ var jogo = {
         } else if (maximo > 0) {
             this._maxPalavra = maximo;
         }
+        // console.log(this._maxPalavra);
     },
     tentaPalavra: function (letra) {
 
@@ -65,7 +67,8 @@ var jogo = {
             let palavra = "";
             // let json = await palavra.json();
 
-            while (this._dicionario == null) {
+            while (this._dicionario == null && palavra.length <= this._maxPalavra) {
+                palavra = "";
                 if (window.awaitFetch == true) { continue; }
                 palavra = getRandomWord(this._maxPalavra);
                 this._dicionario = await getSignificado(palavra);
