@@ -114,6 +114,12 @@ vermelho {
 .keyboard > .key {
   background-color: #0c0c0c;
   color: #fff;
+  height: 2.5em;
+  cursor: pointer;
+}
+
+.keyboard > .key:hover {
+  background-color: #3f3f3f;
 }
 
 #dicionario {
