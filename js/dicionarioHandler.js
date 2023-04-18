@@ -12,9 +12,13 @@ async function getSignificado(palavra) {
     }
 
     // return json[0] ? xmlTranslate(json[0].xml) : null;
+    return json ? json : null;
+}
+
+function showDict(json) {
     fillPalavra(json.palavra);
     fillDefinicao(json.significados);
-    return json ? json : null;
+
 }
 
 function fillPalavra(palavra) {

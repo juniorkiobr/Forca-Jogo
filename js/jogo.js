@@ -76,8 +76,6 @@ var jogo = {
 
                 // Linha para remover acentos
                 tmp = tmp.normalize("NFD").replace(/([\u0300-\u036f])+/g, "");
-                console.log(tmp);
-
                 this._palavra = tmp;
             }
 
@@ -158,6 +156,9 @@ var jogo = {
                 // fillSignificado(this._dicionario);
 
 
+            }
+            if (this._gameOver) {
+                showDict(this._dicionario);
             }
         }
 
