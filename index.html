@@ -35,16 +35,26 @@
     const canvas = document.querySelector(".jogo");
 
     document.addEventListener("DOMContentLoaded", () => {
-      //   jogo.update();
+      jogo.update();
       setInterval(() => {
         // console.log(jogo._canvas);
         if (jogo._canvas == null || jogo._canvas.width != window.innerWidth) {
           jogo.set_canvas(canvas, window.innerWidth, 200);
         }
-
         jogo.update();
       }, 1000 / 60);
     });
+
+    // getSignificado(getRandomWord(13)).then((res) => {
+    //   console.log(res);
+    //   document.querySelector("#palavra").innerHTML = res.palavra;
+    //   document.querySelector("#significado").innerHTML = res.significado;
+    //   document.querySelector("#etimologia").innerHTML = res.etimologia;
+    // });
+
+    // getSignificado("bananas").then((res) => {
+    //   console.log(res);
+    // });
 
     document.addEventListener("keydown", getTeclado);
 

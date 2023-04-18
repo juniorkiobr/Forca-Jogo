@@ -1,77 +1,62 @@
 async function getSignificado(palavra) {
-    let definicao = await fetch("https://api.dicionario-aberto.net/word/" + palavra + "/1?format=json");
-    // console.log(await fetch("https://dicio-api-ten.vercel.app/v2/" + palavra + "/"));
+    palavra = palavra.toLowerCase();
+
+    // Linha para remover acentos
+    palavra = palavra.normalize("NFD").replace(/([\u0300-\u036f])+/g, "");
+    let definicao = await fetch("https://api-dicio-juniorkiobr.vercel.app/api/dicionario?word=" + palavra);
     window.awaitFetch = true;
     let json = await definicao.json();
     window.awaitFetch = false;
-    return json[0] ? xmlTranslate(json[0].xml) : null;
-}
-
-function fillSignificado(dicionario) {
-    let palavra = document.getElementById("palavra");
-    let significado = document.getElementById("significado");
-    let etimologia = document.getElementById("etimologia");
-    palavra.innerHTML = dicionario.palavra;
-    significado.innerHTML = "";
-    etimologia.innerHTML = dicionario.etimologia;
-    for (let i = 0; i < dicionario.sentidos.length; i++) {
-        const element = dicionario.sentidos[i];
-        let extra = false;
-        if (element.grupoGramatical != null) {
-            significado.innerHTML += "<p><strong>" + element.grupoGramatical + "</strong></p>";
-            extra = true;
-        }
-        if (element.sentido.length > 0) {
-            significado.innerHTML += "<p><em>" + element.sentido.join(" ") + "</em></p>";
-            extra = true;
-
-        }
-        for (const item in element.definicao) {
-            // console.log(element.definicao[item], extra);
-            significado.innerHTML += "<p " + (extra ? 'class=" tabulacao "' : "") + "> " + element.definicao[item] + "</p>";
-
-        }
+    if (json && json.length == 0 && (json.status_code && json.status_code != 200) || json.error || (json.definicao && json.definicao.length == 0)) {
+        return null;
     }
+
+    // return json[0] ? xmlTranslate(json[0].xml) : null;
+    fillPalavra(json.palavra);
+    fillDefinicao(json.significados);
+    return json ? json : null;
 }
-function xmlTranslate(xml) {
-    let obj = {};
-    let parser = new DOMParser();
-    let xmlDoc = parser.parseFromString(xml, "text/xml");
 
-    obj.palavra = xmlDoc.getElementsByTagName("entry")[0].getAttribute("id");
-    obj.sentidos = [];
-    let senses = xmlDoc.getElementsByTagName("sense");
-    for (let i = 0; i < senses.length; i++) {
-        let sentido = {};
-        let uso = [];
+function fillPalavra(palavra) {
+    let palavraDiv = document.getElementById("palavra");
+    palavraDiv.innerHTML = `<h1>${palavra}</h1>`;
+}
 
-        // console.log(senses[i].getElementsByTagName("def")[0]?.innerHTML);
-        sentido.grupoGramatical = senses[i].getElementsByTagName("gramGrp")[0]?.innerHTML;
-        sentido.definicao = senses[i].getElementsByTagName("def")[0]?.innerHTML.replace(/(_\.)+/g, "</em>").replace(/_/g, "<em>").split("\n");
-        sentido.definicao.pop();
-        sentido.definicao.shift();
-        sentido.definicao.map((item, index) => {
-            sentido.definicao[index] = (index + 1) + ". " + item;
-        })
-
-        for (let j = 0; j < senses[i].getElementsByTagName("usg").length; j++) {
-            const element = senses[i].getElementsByTagName("usg")[j];
-            uso.push(element.innerHTML);
-
-        }
-        sentido.sentido = uso;
-
-        // sentido.definicao = senses[i].childNodes[5].nodeValue;
-        // sentido.exemplos = [];
-        // for (let j = 0; j < xmlDoc.getElementsByTagName("ex")[i].childNodes.length; j++) {
-        //     sentido.exemplos.push(xmlDoc.getElementsByTagName("ex")[i].childNodes[j].nodeValue);
-        // }
-        obj.sentidos.push(sentido);
+function fillDefinicao(definicao, singular = false) {
+    let significadoDiv = document.getElementById("significado");
+    if (singular) {
+        significadoDiv.innerHTML += "<div id='singular'></div>";
+        significadoDiv = document.getElementById("singular");
+        significadoDiv.innerHTML += `<h2>Significado de ${definicao.palavra}</h2>`;
+        definicao = definicao.significados;
     }
-    obj.etimologia = xmlDoc.getElementsByTagName("etym")[0]?.innerHTML;
-    console.log(obj);
-    return obj;
+    for (const dictionary in definicao) {
+        const element = definicao[dictionary];
+        if (element.singular) continue;
+        if (element.classificacao != "definicao" && element.classificacao != "classificacao") {
+            if (element.classificacao == "etimologia" && element.definicao) {
+                if (singular) {
+                    significadoDiv.innerHTML += `<h3><b>Etimologia:</b> <em>${element.definicao}</em></h3>`;
+                } else {
+                    fillEtimologia(element.definicao);
+                }
+                continue;
+            } else {
+                significadoDiv.innerHTML += `<h3>${element.classificacao}</h3>`;
 
+            }
+        }
+        significadoDiv.innerHTML += "<p>" + element.definicao + "</p>";
+    }
+    // console.log(definicao[0].singular)
+    if (definicao[0]?.singular) {
+        fillDefinicao(definicao[0].singular, true);
+    }
 
-    // let significado = xmlDoc.getElementsByTagName("def")[0].childNodes[0].nodeValue;
 }
+
+function fillEtimologia(etimologia) {
+    let etimologiaDiv = document.getElementById("etimologia");
+    etimologiaDiv.innerHTML = `<h3><b>Etimologia<b>: <em>${etimologia}</em></h3>`;
+}
+

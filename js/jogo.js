@@ -146,7 +146,7 @@ var jogo = {
                 this._canvas.desenhaTexto("Você ganhou!", this._canvas.width / 2 - 50, this._canvas.height / 2, colors.white, "bold 20px Arial", "center");
                 this._canvas.desenhaTexto("A palavra era: " + this._palavra, this._canvas.width / 2 - 50, this._canvas.height / 2 + 25, colors.white, "bold 20px Arial", "center");
                 this._canvas.desenhaTexto("Aperte 'Enter' jogar novamente", this._canvas.width / 2 - 50, this._canvas.height / 2 + 50, colors.white, "bold 20px Arial", "center");
-                fillSignificado(this._dicionario);
+                // fillSignificado(this._dicionario);
 
 
             } else if (this._erros >= 6) {
@@ -155,7 +155,7 @@ var jogo = {
                 this._canvas.desenhaTexto("Você perdeu!", this._canvas.width / 2 - 50, this._canvas.height / 2, colors.white, "bold 20px Arial", "center");
                 this._canvas.desenhaTexto("A palavra era: " + this._palavra, this._canvas.width / 2 - 50, this._canvas.height / 2 + 25, colors.white, "bold 20px Arial", "center");
                 this._canvas.desenhaTexto("Aperte 'Enter' jogar novamente", this._canvas.width / 2 - 50, this._canvas.height / 2 + 50, colors.white, "bold 20px Arial", "center");
-                fillSignificado(this._dicionario);
+                // fillSignificado(this._dicionario);
 
 
             }
