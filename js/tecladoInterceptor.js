@@ -1,9 +1,17 @@
 const getTeclado = (event) => {
+    const keyboard = document.querySelector(".keyboard");
+    const eventMouseOver = new Event("onmouseover")
     const tecla = event.key;
     const teclaCode = event.code;
     // console.log(tecla, teclaCode);
     if (teclaCode >= "KeyA" && teclaCode <= "KeyZ") {
         jogo.tentaPalavra(tecla);
+        let teclaDiv = document.getElementById(tecla)
+        // teclaDiv.dispatchEvent(eventMouseOver);
+        teclaDiv.classList.add("pressed");
+        setTimeout(() => {
+            teclaDiv.classList.remove("pressed");
+        }, 300);
     }
     // switch (tecla) {
     //     case "a":
