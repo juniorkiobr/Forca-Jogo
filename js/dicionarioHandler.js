@@ -9,7 +9,7 @@ async function getSignificado(palavra) {
         let definicao = await fetch("https://api-dicio-juniorkiobr.vercel.app/api/dicionario?word=" + palavra);
         let json = await definicao.json();
         window.awaitFetch = false;
-        if (json && json.length == 0 && (json.status_code) || json.error || (json.definicao && json.definicao.length == 0)) {
+        if (json && json.length == 0 || (json.status_code) || json.error || (json.definicao && json.definicao.length == 0)) {
             return null;
         } else {
             return json;

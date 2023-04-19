@@ -12,14 +12,24 @@ function createKeyboard() {
         if (keys[i] == "Enter") {
             key.onmousedown = function () {
                 jogo.resetGame()
+                this.classList.add("pressed");
+                setTimeout(() => {
+                    this.classList.remove("pressed");
+                }, 300);
+
 
             }
         } else {
             key.onmousedown = function () {
                 jogo.tentaPalavra(this.id)
+                this.classList.add("pressed");
+                setTimeout(() => {
+                    this.classList.remove("pressed");
+                }, 300);
 
             }
         }
+
 
         ;
         keyboard.appendChild(key);

@@ -118,7 +118,6 @@ vermelho {
   cursor: pointer;
 }
 
-.keyboard > .key:hover,
 .keyboard > .key.pressed {
   transition: background-color 0.2s ease-in-out;
   background-color: #3f3f3f;
